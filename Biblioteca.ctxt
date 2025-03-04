@@ -1,0 +1,15 @@
+#BlueJ class context
+comment0.target=Biblioteca
+comment1.params=
+comment1.target=Biblioteca()
+comment2.params=libro
+comment2.target=void\ agregarLibro(Libro)
+comment3.params=
+comment3.target=java.lang.String\ getLibros()
+comment4.params=titulo
+comment4.target=java.lang.String\ buscarLibroPorTitulo(java.lang.String)
+comment5.params=
+comment5.target=void\ guardarLibros()
+comment6.params=
+comment6.target=void\ cargarLibros()
+numComments=7
