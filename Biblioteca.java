@@ -1,71 +1,86 @@
-import java.io.*;
 import java.util.ArrayList;
+import java.io.*;
 
 public class Biblioteca {
 
     private ArrayList<Libro> libros;
-    private static final String ARCHIVO = "libros.txt"; // El archivo donde se guardarán los libros
+    private static final String ARCHIVO = "libros.txt";
 
     public Biblioteca() {
         this.libros = new ArrayList<>();
-        cargarLibros(); // Cargar los libros cuando se inicializa la biblioteca
+        cargarLibros();
     }
 
     public void agregarLibro(Libro libro) {
         libros.add(libro);
-        guardarLibros(); // Guardar los libros cada vez que se agrega uno
+        guardarLibros();
     }
 
-    public String getLibros() {
-        if (libros.isEmpty()) {
-            return "No hay libros en la biblioteca.";
-        }
-        StringBuilder info = new StringBuilder();
+    public ArrayList<Libro> getLibros() {
+        return libros;
+    }
+
+    public ArrayList<Libro> getLibrosPrestados(boolean prestados) {
+        ArrayList<Libro> resultado = new ArrayList<>();
         for (Libro libro : libros) {
-            info.append(libro.getInformacion()).append("\n\n");
+            if (libro.isPrestado() == prestados) {
+                resultado.add(libro);
+            }
         }
-        return info.toString();
+        return resultado;
     }
 
     public String buscarLibroPorTitulo(String titulo) {
         for (Libro libro : libros) {
             if (libro.getTitulo().equalsIgnoreCase(titulo)) {
-                return "Libro encontrado: \n" + libro.getInformacion();
+                return "Título: " + libro.getTitulo() + "\n" +
+                        "Autor: " + libro.getAutor().getNombre() + "\n" +
+                        "Correo del Autor: " + libro.getAutor().getCorreo() + "\n" +
+                        "Año de Publicación: " + libro.getAnioPublicacion() + "\n" +
+                        "ISBN: " + libro.getIsbn() + "\n" +
+                        "Prestado: " + (libro.isPrestado() ? "Sí" : "No") + "\n";
             }
         }
-        return "No se encontró el libro con el título: " + titulo;
+        return "No se encontró un libro con ese título.";
     }
 
-    // Guardar los libros en un archivo de texto
     private void guardarLibros() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARCHIVO))) {
             for (Libro libro : libros) {
                 writer.write(libro.getTitulo() + "\n");
-                writer.write(libro.getAutor() + "\n");
-                writer.write(libro.getAñoPublicacion() + "\n");
-                writer.write(libro.getIsbn() + "\n\n");
+                writer.write(libro.getAutor().getId() + "\n");
+                writer.write(libro.getAutor().getNombre() + "\n");
+                writer.write(libro.getAutor().getCorreo() + "\n");
+                writer.write(libro.getAnioPublicacion() + "\n");
+                writer.write(libro.getIsbn() + "\n");
+                writer.write(libro.isPrestado() + "\n\n");
             }
         } catch (IOException e) {
-            System.err.println("Error al guardar los libros: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    // Cargar los libros desde un archivo de texto
     private void cargarLibros() {
         try (BufferedReader reader = new BufferedReader(new FileReader(ARCHIVO))) {
-            String linea;
-            while ((linea = reader.readLine()) != null) {
-                String titulo = linea;
-                String autor = reader.readLine();
-                int añoPublicacion = Integer.parseInt(reader.readLine());
+            String titulo;
+            while ((titulo = reader.readLine()) != null) {
+                int id = Integer.parseInt(reader.readLine());
+                String nombre = reader.readLine();
+                String correo = reader.readLine();
+                Autor autor = new Autor(id, nombre, correo);
+                int anioPublicacion = Integer.parseInt(reader.readLine());
                 String isbn = reader.readLine();
-                libros.add(new Libro(titulo, autor, añoPublicacion, isbn));
-                reader.readLine(); // Leer la línea vacía entre los libros
+                boolean prestado = Boolean.parseBoolean(reader.readLine());
+                libros.add(new Libro(titulo, autor, anioPublicacion, isbn, prestado));
+                if (reader.readLine() == null) {
+                    break;
+                }
             }
         } catch (FileNotFoundException e) {
-            // Si el archivo no existe, significa que es la primera vez que se ejecuta el programa
-        } catch (IOException e) {
-            System.err.println("Error al cargar los libros: " + e.getMessage());
+            // Archivo no encontrado, iniciando sin libros.
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
         }
     }
 }
+
