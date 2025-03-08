@@ -1,66 +1,89 @@
-import javax.swing.*;
+import java.util.Scanner;
 
 public class Main {
-
     private Biblioteca biblioteca;
+    private Scanner scanner;
 
     public Main() {
-        this.biblioteca = new Biblioteca(); // Inicializa la biblioteca
+        this.biblioteca = new Biblioteca();
+        this.scanner = new Scanner(System.in);
     }
 
     private void agregarLibro() {
-        String titulo = JOptionPane.showInputDialog("Ingrese el título del libro:");
-        String autor = JOptionPane.showInputDialog("Ingrese el autor del libro:");
-        String añoStr = JOptionPane.showInputDialog("Ingrese el año de publicación:");
-        int año = Integer.parseInt(añoStr);
-        String isbn = JOptionPane.showInputDialog("Ingrese el ISBN del libro:");
+        System.out.print("Ingrese el título del libro: ");
+        String titulo = scanner.nextLine();
 
-        Libro libro = new Libro(titulo, autor, año, isbn);
+        System.out.print("Ingrese el ID del autor: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Ingrese el nombre del autor: ");
+        String nombreAutor = scanner.nextLine();
+
+        System.out.print("Ingrese el correo del autor: ");
+        String correo = scanner.nextLine();
+
+        System.out.print("Ingrese el año de publicación: ");
+        int anio = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Ingrese el ISBN del libro: ");
+        String isbn = scanner.nextLine();
+
+        Autor autor = new Autor(id, nombreAutor, correo);
+        Libro libro = new Libro(titulo, autor, anio, isbn, false);
         biblioteca.agregarLibro(libro);
-        JOptionPane.showMessageDialog(null, "¡Libro agregado exitosamente!\n", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        System.out.println("¡Libro agregado exitosamente!\n");
     }
 
-    private void verLibros() {
-        String todosLosLibros = biblioteca.getLibros();
-        JOptionPane.showMessageDialog(null, todosLosLibros, "Lista de Libros", JOptionPane.INFORMATION_MESSAGE);
+    private void mostrarLibros() {
+        System.out.println("\n===== Lista de Libros =====");
+        for (Libro libro : biblioteca.getLibros()) {
+            System.out.println("Título: " + libro.getTitulo());
+            System.out.println("Autor: " + libro.getAutor().getNombre());
+            System.out.println("Correo del Autor: " + libro.getAutor().getCorreo());
+            System.out.println("Año de Publicación: " + libro.getAnioPublicacion());
+            System.out.println("ISBN: " + libro.getIsbn());
+            System.out.println("Prestado: " + (libro.isPrestado() ? "Sí" : "No"));
+            System.out.println("------------------------------");
+        }
     }
 
     private void buscarLibro() {
-        String tituloBuscar = JOptionPane.showInputDialog("Ingrese el título del libro a buscar:");
+        System.out.print("Ingrese el título del libro a buscar: ");
+        String tituloBuscar = scanner.nextLine();
         String resultadoBusqueda = biblioteca.buscarLibroPorTitulo(tituloBuscar);
-        JOptionPane.showMessageDialog(null, resultadoBusqueda, "Resultado de la Búsqueda", JOptionPane.INFORMATION_MESSAGE);
+        System.out.println(resultadoBusqueda);
     }
 
     public void ejecutar() {
         while (true) {
-            String menu = "===== Menú de la Biblioteca =====\n" +
-                          "1. Agregar un libro\n" +
-                          "2. Ver todos los libros\n" +
-                          "3. Buscar un libro por título\n" +
-                          "4. Salir";
-            String opcionStr = JOptionPane.showInputDialog(null, menu, "Menú de la Biblioteca", JOptionPane.PLAIN_MESSAGE);
+            System.out.println("\n===== Menú de la Biblioteca =====");
+            System.out.println("1. Agregar libro");
+            System.out.println("2. Mostrar libros");
+            System.out.println("3. Buscar libros por nombre");
+            System.out.println("4. Salir");
+            System.out.print("Seleccione una opción: ");
 
-            if (opcionStr == null) {
-                break;
-            }
-
-            int opcion = Integer.parseInt(opcionStr);
+            int opcion = scanner.nextInt();
+            scanner.nextLine();
 
             switch (opcion) {
                 case 1:
                     agregarLibro();
                     break;
                 case 2:
-                    verLibros();
+                    mostrarLibros();
                     break;
                 case 3:
                     buscarLibro();
                     break;
                 case 4:
-                    JOptionPane.showMessageDialog(null, "¡Hasta luego!", "Salir", JOptionPane.INFORMATION_MESSAGE);
+                    System.out.println("¡Hasta luego!");
+                    scanner.close();
                     return;
                 default:
-                    JOptionPane.showMessageDialog(null, "Opción no válida. Por favor, intente de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+                    System.out.println("Opción no válida. Intente de nuevo.");
             }
         }
     }
@@ -70,6 +93,7 @@ public class Main {
         main.ejecutar();
     }
 }
+
 
 
      

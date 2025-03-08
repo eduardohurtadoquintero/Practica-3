@@ -1,42 +1,41 @@
 public class Libro {
 
     private String titulo;
-    private String autor;
-    private int añoPublicacion;
+    private Autor autor;
+    private int anioPublicacion;
     private String isbn;
+    private boolean prestado;
 
-    public Libro(String titulo, String autor, int añoPublicacion, String isbn) {
+    public Libro(String titulo, Autor autor, int anioPublicacion, String isbn, boolean prestado) {
         this.titulo = titulo;
         this.autor = autor;
-        this.añoPublicacion = añoPublicacion;
+        this.anioPublicacion = anioPublicacion;
         this.isbn = isbn;
+        this.prestado = prestado;
     }
 
     public String getTitulo() {
         return titulo;
     }
 
-    public String getAutor() {
+    public Autor getAutor() {
         return autor;
     }
 
-    public int getAñoPublicacion() {
-        return añoPublicacion;
+    public int getAnioPublicacion() {
+        return anioPublicacion;
     }
 
     public String getIsbn() {
         return isbn;
     }
 
-    public String getInformacion() {
-        return "Título: " + titulo + "\n" +
-               "Autor: " + autor + "\n" +
-               "Año de publicación: " + añoPublicacion + "\n" +
-               "ISBN: " + isbn;
+    public boolean isPrestado() {
+        return prestado;
     }
 
-    @Override
-    public String toString() {
-        return getInformacion();
+    public void setPrestado(boolean prestado) {
+        this.prestado = prestado;
     }
 }
+
